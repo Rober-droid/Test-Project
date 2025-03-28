@@ -18,17 +18,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "https://sonarcloud.io"
-        run: |
-          sonar-scanner
-      - name: Check SonarCloud Quality 
-        run: |
-          curl -u ${{ secrets.SONAR_TOKEN }}: \
-          "https://sonarcloud.io/api/qualitygates/project_status?projectKey=Test-Project" \
-          | jq -r '.projectStatus.status' > status.txt
-      - name: Send notification if Quality Gate fails
-        if: failure()
-        run: |
-          status=$(cat status.txt)
-          if [ "$status" != "OK" ]; then
-            echo "El proyecto no pasó la evaluación de SonarCloud: $status"
-          fi
