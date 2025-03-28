@@ -15,13 +15,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pylint pytest pytest-cov
-      - name: Install SonarScanner
+      - name : INstalar SonarScanner
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y openjdk-11-jre
-          curl -OL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-          export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+            sudo apt-get update -y
+            sudo apt-get install -y openjdk-11-jre
+            curl -OL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+            unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+            echo 'export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin' >> ~/.bashrc
+            source ~/.bashrc
       - name: Ejecutar escaner SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
