@@ -7,38 +7,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Configurar Java 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-
       - name: Instalar Dependencias
         run: |
           python -m pip install --upgrade pip
           pip install pylint pytest pytest-cov
-
-      - name: Instalar dependencias del sistema
+      - name: Install SonarScanner
         run: |
-          sudo apt-get install -y curl unzip
-
-      - name: Instalar Sonar Scanner
-        run: |
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-          unzip sonar-scanner.zip
-          mv sonar-scanner-4.8.0.2856-linux sonar-scanner
-          echo "$(pwd)/sonar-scanner/bin" >> $GITHUB_PATH
-
+          sudo apt-get update -y
+          sudo apt-get install -y openjdk-11-jre
+          curl -OL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+          export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
       - name: Ejecutar escaner SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "https://sonarcloud.io"
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17
         run: |
           sonar-scanner
